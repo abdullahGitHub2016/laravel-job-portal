@@ -91,13 +91,14 @@ class JobController extends Controller
     {
         abort_unless($job->status === 'published', 404);
 
+        JobPost::where('id', $job->id)->increment('view_count');
+        $job->refresh();
+
         $job->loadMissing([
             'employerProfile' => fn($q) => $q->with('industry'),
             'category',
             'skills',
         ]);
-
-        JobPost::where('id', $job->id)->increment('view_count');
 
         $hasApplied = $hasSaved = false;
         $applicationStatus = null;
@@ -114,7 +115,7 @@ class JobController extends Controller
             }
         }
 
-        $relatedJobs = JobPost::with('employerProfile:id,company_name,logo')
+        $relatedJobs = JobPost::with('employerProfile:id,company_name,logo,district')
             ->published()
             ->where('category_id', $job->category_id)
             ->where('id', '!=', $job->id)
@@ -122,8 +123,8 @@ class JobController extends Controller
             ->limit(4)->get();
 
         return Inertia::render('Jobs/Show', [
-            'job'               => new JobResource($job),
-            'relatedJobs'       => JobResource::collection($relatedJobs),
+            'job'               => (new JobResource($job))->resolve(),
+            'relatedJobs'       => JobResource::collection($relatedJobs)->resolve(),
             'hasApplied'        => $hasApplied,
             'applicationStatus' => $applicationStatus,
             'hasSaved'          => $hasSaved,

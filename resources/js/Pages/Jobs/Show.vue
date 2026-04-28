@@ -264,7 +264,7 @@ const statusColors = {
                 </div>
                 <div class="flex justify-between">
                   <dt class="text-slate-500">Views</dt>
-                  <dd class="font-medium text-slate-700">{{ job.view_count.toLocaleString() }}</dd>
+                  <dd class="font-medium text-slate-700">{{ job.view_count?.toLocaleString() ?? 0 }}</dd>
                 </div>
               </dl>
             </div>
@@ -290,7 +290,7 @@ const statusColors = {
       </div>
 
       <!-- ── Related Jobs ───────────────────────────────────────────────── -->
-      <div v-if="relatedJobs.length" class="mt-12">
+      <div v-if="relatedJobs?.length" class="mt-12">
         <h2 class="text-xl font-bold text-slate-900 mb-5">Similar Jobs</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <JobCard v-for="rJob in relatedJobs" :key="rJob.id" :job="rJob" />

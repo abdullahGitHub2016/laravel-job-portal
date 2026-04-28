@@ -99,7 +99,7 @@ class JobController extends Controller
         $job->load('skills', 'category');
 
         return Inertia::render('Employer/Jobs/Create', [
-            'job'        => new JobResource($job),
+            'job'        => (new JobResource($job))->resolve(),
             'categories' => Category::where('is_active', true)->get(['id', 'name']),
             'skills'     => Skill::orderBy('name')->get(['id', 'name', 'category']),
         ]);

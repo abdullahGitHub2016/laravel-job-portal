@@ -84,7 +84,7 @@ const STATUS_COLORS = {
         <div class="space-y-3">
           <Link
             v-for="job in recommendedJobs" :key="job.id"
-            :href="route('jobs.show', job.slug)"
+            :href="route('jobs.show', { job: job.slug })"
             class="block p-3 rounded-xl hover:bg-slate-50 transition-colors group"
           >
             <p class="text-sm font-medium text-slate-800 group-hover:text-emerald-700 transition-colors">{{ job.title }}</p>

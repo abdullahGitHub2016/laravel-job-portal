@@ -21,7 +21,7 @@ class DashboardController extends Controller
                 ->get()
             : collect();
 
-        $recommendedJobs = JobPost::with('employerProfile:id,company_name,logo')
+        $recommendedJobs = JobPost::with('employerProfile:id,company_name,logo,district')
             ->published()
             ->inRandomOrder()
             ->limit(6)
@@ -35,7 +35,7 @@ class DashboardController extends Controller
                 'profile_views'=> 0,
             ],
             'recentApplications' => $recentApplications,
-            'recommendedJobs'    => JobResource::collection($recommendedJobs),
+            'recommendedJobs'    => JobResource::collection($recommendedJobs)->resolve(),
         ]);
     }
 }
