@@ -60,19 +60,25 @@ class JobController extends Controller
             'is_remote'            => ['boolean'],
             'location'             => ['nullable', 'string', 'max:200'],
             'district'             => ['nullable', 'string', 'max:100'],
+            'gender_preference'    => ['nullable', 'in:any,male,female'],
             'application_deadline' => ['required', 'date', 'after:today'],
+            // ✅ status now accepted from the form
+            'status'               => ['required', 'in:draft,published'],
             'skills'               => ['nullable', 'array'],
             'skills.*.id'          => ['required', 'exists:skills,id'],
             'skills.*.required'    => ['boolean'],
         ]);
 
-        $data['slug']                = Str::slug($data['title']) . '-' . Str::random(6);
-        $data['employer_profile_id'] = $this->employerProfile()->id;
-        $data['status']              = 'published';
-        $data['published_at']        = now();
-
         $skillsData = $data['skills'] ?? [];
         unset($data['skills']);
+
+        $data['slug']                = Str::slug($data['title']) . '-' . Str::random(6);
+        $data['employer_profile_id'] = $this->employerProfile()->id;
+
+        // ✅ Only set published_at when actually publishing
+        if ($data['status'] === 'published') {
+            $data['published_at'] = now();
+        }
 
         $job = JobPost::create($data);
 
@@ -83,7 +89,9 @@ class JobController extends Controller
             $job->skills()->sync($pivot);
         }
 
-        return redirect()->route('employer.jobs.index')->with('success', 'Job post published!');
+        $message = $data['status'] === 'published' ? 'Job published successfully!' : 'Job saved as draft.';
+
+        return redirect()->route('employer.jobs.index')->with('success', $message);
     }
 
     public function edit(JobPost $job): Response
@@ -117,12 +125,22 @@ class JobController extends Controller
             'is_remote'            => ['boolean'],
             'location'             => ['nullable', 'string', 'max:200'],
             'district'             => ['nullable', 'string', 'max:100'],
+            'gender_preference'    => ['nullable', 'in:any,male,female'],
             'application_deadline' => ['required', 'date'],
+            'status'               => ['required', 'in:draft,published'],
             'skills'               => ['nullable', 'array'],
+            'skills.*.id'          => ['required', 'exists:skills,id'],
+            'skills.*.required'    => ['boolean'],
         ]);
 
         $skillsData = $data['skills'] ?? [];
         unset($data['skills']);
+
+        // Set published_at if transitioning to published for first time
+        if ($data['status'] === 'published' && ! $job->published_at) {
+            $data['published_at'] = now();
+        }
+
         $job->update($data);
 
         if (! empty($skillsData)) {

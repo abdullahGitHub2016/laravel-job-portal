@@ -10,6 +10,8 @@ class WorkExperience extends Model
 {
     use HasFactory, HasUuids;
 
+    protected $table = 'work_experiences';   // ← explicit table name
+
     protected $fillable = [
         'job_seeker_profile_id','company_name','job_title','employment_type',
         'location','start_date','end_date','is_current','responsibilities',
@@ -21,5 +23,8 @@ class WorkExperience extends Model
         'is_current' => 'boolean',
     ];
 
-    public function jobSeekerProfile(): BelongsTo { return $this->belongsTo(JobSeekerProfile::class); }
+    public function jobSeekerProfile(): BelongsTo
+    {
+        return $this->belongsTo(JobSeekerProfile::class);
+    }
 }

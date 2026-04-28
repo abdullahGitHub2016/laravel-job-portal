@@ -10,6 +10,8 @@ class Education extends Model
 {
     use HasFactory, HasUuids;
 
+    protected $table = 'educations';   // ← explicit table name
+
     protected $fillable = [
         'job_seeker_profile_id','degree','field_of_study','institution_name',
         'board_or_university','passing_year','result','result_value','is_highest_education',
@@ -17,5 +19,8 @@ class Education extends Model
 
     protected $casts = ['is_highest_education' => 'boolean'];
 
-    public function jobSeekerProfile(): BelongsTo { return $this->belongsTo(JobSeekerProfile::class); }
+    public function jobSeekerProfile(): BelongsTo
+    {
+        return $this->belongsTo(JobSeekerProfile::class);
+    }
 }

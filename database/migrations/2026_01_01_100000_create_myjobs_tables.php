@@ -8,15 +8,6 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // Modify existing users table to add job portal columns
-        Schema::table('users', function (Blueprint $table) {
-            $table->enum('user_type', ['job_seeker', 'employer', 'admin'])->default('job_seeker')->after('email');
-            $table->string('phone', 20)->nullable()->after('user_type');
-            $table->string('avatar')->nullable()->after('phone');
-            $table->boolean('is_active')->default(true)->after('avatar');
-            $table->softDeletes();
-        });
-
         // Categories
         Schema::create('categories', function (Blueprint $table) {
             $table->uuid('id')->primary();
@@ -43,7 +34,7 @@ return new class extends Migration
         // Employer Profiles
         Schema::create('employer_profiles', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->uuid('user_id')->unique();
             $table->uuid('industry_id')->nullable();
             $table->string('company_name');
             $table->string('slug')->unique();
@@ -60,13 +51,13 @@ return new class extends Migration
             $table->string('country', 2)->default('BD');
             $table->enum('verification_status', ['pending','verified','rejected','suspended'])->default('pending');
             $table->timestamp('verified_at')->nullable();
-            $table->string('verified_by')->nullable();
+            $table->uuid('verified_by')->nullable();
             $table->boolean('is_premium')->default(false);
             $table->timestamp('premium_expires_at')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
             $table->softDeletes();
-            //$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->index('verification_status');
             $table->index('district');
         });
@@ -74,7 +65,7 @@ return new class extends Migration
         // Job Seeker Profiles
         Schema::create('job_seeker_profiles', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignId('user_id')->unique()->constrained()->onDelete('cascade');
+            $table->uuid('user_id')->unique();
             $table->string('headline')->nullable();
             $table->text('bio')->nullable();
             $table->string('current_job_title')->nullable();
@@ -96,7 +87,7 @@ return new class extends Migration
             $table->boolean('is_profile_public')->default(true);
             $table->timestamps();
             $table->softDeletes();
-            //$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->index('job_seeking_status');
         });
 
@@ -196,8 +187,6 @@ return new class extends Migration
             $table->index('is_featured');
             $table->index('application_deadline');
             $table->index('published_at');
-            // MySQL FULLTEXT index for search
-            $table->fullText(['title', 'description', 'requirements']);
         });
 
         // Job Post ↔ Skills pivot
@@ -220,7 +209,7 @@ return new class extends Migration
             $table->decimal('expected_salary', 12, 2)->nullable();
             $table->enum('status', ['pending','reviewed','shortlisted','interview','offered','hired','rejected','withdrawn'])->default('pending');
             $table->text('employer_notes')->nullable();
-            $table->string('reviewed_by')->nullable();
+            $table->uuid('reviewed_by')->nullable();
             $table->timestamp('reviewed_at')->nullable();
             $table->boolean('is_seen_by_seeker')->default(false);
             $table->timestamps();
@@ -246,7 +235,7 @@ return new class extends Migration
         // Search Logs
         Schema::create('search_logs', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('user_id')->nullable();
+            $table->uuid('user_id')->nullable();
             $table->string('session_id')->nullable();
             $table->string('query')->nullable();
             $table->uuid('category_id')->nullable();
