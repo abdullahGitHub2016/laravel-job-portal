@@ -11,7 +11,16 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Register role-based middleware aliases
+        $middleware->alias([
+            'seeker'   => \App\Http\Middleware\EnsureJobSeeker::class,
+            'employer' => \App\Http\Middleware\EnsureEmployer::class,
+        ]);
+
+        // Share Inertia data on every web request
+        $middleware->web(append: [
+            \App\Http\Middleware\HandleInertiaRequests::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
