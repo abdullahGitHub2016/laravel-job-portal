@@ -1,1 +1,65 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+
+    /* BDJobs brand colors */
+    --color-bd-blue-50:  #eef4fb;
+    --color-bd-blue-100: #d4e4f5;
+    --color-bd-blue-200: #a9c9eb;
+    --color-bd-blue-300: #7eaee1;
+    --color-bd-blue-400: #5393d7;
+    --color-bd-blue-500: #1A5EA1;
+    --color-bd-blue-600: #164f8a;
+    --color-bd-blue-700: #114073;
+    --color-bd-blue-800: #0d315c;
+    --color-bd-blue-900: #082245;
+
+    --color-bd-yellow-50:  #fdfce8;
+    --color-bd-yellow-100: #faf7c3;
+    --color-bd-yellow-200: #f5ef87;
+    --color-bd-yellow-300: #f0e74b;
+    --color-bd-yellow-400: #DCD445;
+    --color-bd-yellow-500: #c4bc2e;
+    --color-bd-yellow-600: #a09824;
+    --color-bd-yellow-700: #7c761b;
+    --color-bd-yellow-800: #585412;
+    --color-bd-yellow-900: #343209;
+
+
+    --color-bd-pink-50:  #fdf0f7;
+    --color-bd-pink-100: #fad9ed;
+    --color-bd-pink-200: #f4b3db;
+    --color-bd-pink-300: #ec8dc8;
+    --color-bd-pink-400: #cd4d97;
+    --color-bd-pink-500: #B32D7D;
+    --color-bd-pink-600: #97256a;
+    --color-bd-pink-700: #7b1d56;
+    --color-bd-pink-800: #5f1643;
+    --color-bd-pink-900: #430e30;
+    --color-bd-green-50:  #e6f4ed;
+    --color-bd-green-100: #c0e3d1;
+    --color-bd-green-200: #81c8a3;
+    --color-bd-green-300: #42ac75;
+    --color-bd-green-400: #039151;
+    --color-bd-green-500: #00743E;
+    --color-bd-green-600: #006135;
+    --color-bd-green-700: #004e2a;
+    --color-bd-green-800: #003a20;
+    --color-bd-green-900: #002715;
+}
+
+/* Hide scrollbar everywhere (keep scroll functionality) */
+* {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+*::-webkit-scrollbar {
+    display: none;
+}

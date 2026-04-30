@@ -52,7 +52,7 @@ function totalCount() {
   <EmployerLayout :title="`Applicants — ${job.title}`">
 
     <!-- Header -->
-    <div class="mb-6 flex items-center justify-between">
+    <div class="mb-6 flex flex-col sm:flex-row sm:items-center gap-3 sm:justify-between">
       <div>
         <h1 class="text-xl font-bold text-slate-900">{{ job.title }}</h1>
         <p class="text-sm text-slate-500 mt-0.5">

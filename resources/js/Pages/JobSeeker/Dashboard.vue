@@ -27,7 +27,7 @@ const STATUS_COLORS = {
   <SeekerLayout title="Dashboard">
 
     <!-- Stat Cards -->
-    <div class="grid grid-cols-4 gap-4 mb-8">
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
       <div class="bg-white rounded-xl border border-slate-100 shadow-sm p-5">
         <p class="text-xs font-semibold text-slate-400 uppercase tracking-wide">Applications</p>
         <p class="text-3xl font-bold text-slate-900 mt-1">{{ stats.applications }}</p>
@@ -46,7 +46,7 @@ const STATUS_COLORS = {
       </div>
     </div>
 
-    <div class="grid grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
       <!-- Recent Applications -->
       <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">

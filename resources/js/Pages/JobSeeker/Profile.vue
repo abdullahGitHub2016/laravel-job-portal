@@ -135,16 +135,16 @@ function submitResume() {
   <SeekerLayout title="My Profile">
 
     <!-- Profile completion banner -->
-    <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6 flex items-center justify-between">
+    <div class="bg-bd-pink-50 border border-bd-pink-200 rounded-xl p-4 mb-6 flex flex-col sm:flex-row sm:items-center gap-3 sm:justify-between">
       <div class="flex items-center gap-3">
-        <span class="text-amber-500 text-xl">⚠️</span>
+        <span class="text-bd-pink-500 text-xl">⚠️</span>
         <div>
-          <p class="text-sm font-semibold text-amber-800">Complete your profile to get noticed by employers</p>
-          <p class="text-xs text-amber-600 mt-0.5">Add education, skills, and work experience to stand out</p>
+          <p class="text-sm font-semibold text-bd-pink-800">Complete your profile to get noticed by employers</p>
+          <p class="text-xs text-bd-pink-600 mt-0.5">Add education, skills, and work experience to stand out</p>
         </div>
       </div>
       <a :href="route('seeker.resume.pdf')" target="_blank"
-        class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium rounded-lg transition-colors">
+        class="px-4 py-2 bg-bd-pink-500 hover:bg-bd-pink-600 text-white text-sm font-medium rounded-lg transition-colors">
         Download PDF
       </a>
     </div>
@@ -156,7 +156,7 @@ function submitResume() {
         @click="activeTab = i"
         class="px-4 py-2.5 text-sm font-medium whitespace-nowrap border-b-2 transition-colors"
         :class="activeTab === i
-          ? 'border-emerald-500 text-emerald-700'
+          ? 'border-bd-pink-500 text-bd-pink-700'
           : 'border-transparent text-slate-500 hover:text-slate-700'"
       >
         {{ tab }}
@@ -168,47 +168,47 @@ function submitResume() {
       <form @submit.prevent="personalForm.patch(route('seeker.profile.update'))" class="bg-white rounded-2xl border border-slate-100 shadow-sm p-8 space-y-5">
 
         <div>
-          <label class="block text-sm font-medium text-slate-700 mb-1.5">Professional Headline</label>
+          <label class="block text-sm font-medium text-bd-pink-900 mb-1.5">Professional Headline</label>
           <input v-model="personalForm.headline" type="text"
             placeholder="e.g. Senior Full-Stack Developer | PHP & Vue.js"
-            class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-emerald-400" />
+            class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-bd-pink-400" />
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-slate-700 mb-1.5">Professional Summary</label>
+          <label class="block text-sm font-medium text-bd-pink-900 mb-1.5">Professional Summary</label>
           <textarea v-model="personalForm.bio" rows="5"
             placeholder="Tell employers about yourself, your goals, and what makes you unique…"
-            class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-emerald-400 resize-y" />
+            class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-bd-pink-400 resize-y" />
         </div>
 
-        <div class="grid grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1.5">Current Job Title</label>
+            <label class="block text-sm font-medium text-bd-pink-900 mb-1.5">Current Job Title</label>
             <input v-model="personalForm.current_job_title" type="text"
-              class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-emerald-400" />
+              class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-bd-pink-400" />
           </div>
           <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1.5">Current Company</label>
+            <label class="block text-sm font-medium text-bd-pink-900 mb-1.5">Current Company</label>
             <input v-model="personalForm.current_company" type="text"
-              class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-emerald-400" />
+              class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-bd-pink-400" />
           </div>
         </div>
 
-        <div class="grid grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1.5">Years of Experience</label>
+            <label class="block text-sm font-medium text-bd-pink-900 mb-1.5">Years of Experience</label>
             <input v-model.number="personalForm.years_of_experience" type="number" min="0" max="50"
-              class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-emerald-400" />
+              class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-bd-pink-400" />
           </div>
           <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1.5">District</label>
+            <label class="block text-sm font-medium text-bd-pink-900 mb-1.5">District</label>
             <input v-model="personalForm.district" type="text" placeholder="e.g. Dhaka"
-              class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-emerald-400" />
+              class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-bd-pink-400" />
           </div>
           <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1.5">Job Seeking Status</label>
+            <label class="block text-sm font-medium text-bd-pink-900 mb-1.5">Job Seeking Status</label>
             <select v-model="personalForm.job_seeking_status"
-              class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-emerald-400">
+              class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-bd-pink-400">
               <option value="actively_looking">Actively Looking</option>
               <option value="open_to_offers">Open to Offers</option>
               <option value="not_looking">Not Looking</option>
@@ -216,21 +216,21 @@ function submitResume() {
           </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1.5">Expected Min Salary (BDT)</label>
+            <label class="block text-sm font-medium text-bd-pink-900 mb-1.5">Expected Min Salary (BDT)</label>
             <input v-model.number="personalForm.expected_salary_min" type="number"
-              class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-emerald-400" />
+              class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-bd-pink-400" />
           </div>
           <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1.5">Expected Max Salary (BDT)</label>
+            <label class="block text-sm font-medium text-bd-pink-900 mb-1.5">Expected Max Salary (BDT)</label>
             <input v-model.number="personalForm.expected_salary_max" type="number"
-              class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-emerald-400" />
+              class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-bd-pink-400" />
           </div>
         </div>
 
         <button type="submit" :disabled="personalForm.processing"
-          class="px-6 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-semibold rounded-lg disabled:opacity-60">
+          class="px-6 py-2.5 bg-bd-pink-500 hover:bg-bd-pink-600 text-white text-sm font-semibold rounded-lg disabled:opacity-60">
           {{ personalForm.processing ? 'Saving…' : 'Save Personal Info' }}
         </button>
       </form>
@@ -241,11 +241,11 @@ function submitResume() {
 
       <!-- Existing entries -->
       <div v-for="edu in profile.educations" :key="edu.id"
-        class="bg-white rounded-xl border border-slate-100 shadow-sm p-5 flex items-start justify-between gap-4">
+        class="bg-white rounded-xl border-l-4 border-l-bd-pink-400 border border-slate-100 shadow-sm p-5 flex items-start justify-between gap-4">
         <div>
           <div class="flex items-center gap-2">
             <p class="font-semibold text-slate-800">{{ edu.degree }} in {{ edu.field_of_study }}</p>
-            <span v-if="edu.is_highest_education" class="px-2 py-0.5 bg-emerald-100 text-emerald-700 text-xs rounded-full font-medium">Highest</span>
+            <span v-if="edu.is_highest_education" class="px-2 py-0.5 bg-bd-pink-100 text-bd-pink-700 text-xs rounded-full font-medium">Highest</span>
           </div>
           <p class="text-sm text-slate-500">{{ edu.institution_name }}</p>
           <p class="text-xs text-slate-400 mt-1">{{ edu.passing_year }} · {{ edu.result_value }}</p>
@@ -255,45 +255,45 @@ function submitResume() {
 
       <!-- Add new entry form -->
       <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-8">
-        <h3 class="font-semibold text-slate-800 mb-5">Add Education</h3>
+        <h3 class="font-semibold text-bd-pink-700 mb-5">Add Education</h3>
         <form @submit.prevent="submitEducation" class="space-y-4">
-          <div class="grid grid-cols-2 gap-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label class="block text-sm font-medium text-slate-700 mb-1.5">Degree *</label>
+              <label class="block text-sm font-medium text-bd-pink-900 mb-1.5">Degree *</label>
               <input v-model="eduForm.degree" required type="text" placeholder="e.g. Bachelor of Science"
-                class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-emerald-400" />
+                class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-bd-pink-400" />
             </div>
             <div>
-              <label class="block text-sm font-medium text-slate-700 mb-1.5">Field of Study *</label>
+              <label class="block text-sm font-medium text-bd-pink-900 mb-1.5">Field of Study *</label>
               <input v-model="eduForm.field_of_study" required type="text" placeholder="e.g. Computer Science"
-                class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-emerald-400" />
+                class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-bd-pink-400" />
             </div>
           </div>
           <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1.5">Institution *</label>
+            <label class="block text-sm font-medium text-bd-pink-900 mb-1.5">Institution *</label>
             <input v-model="eduForm.institution_name" required type="text" placeholder="University / College name"
-              class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-emerald-400" />
+              class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-bd-pink-400" />
           </div>
-          <div class="grid grid-cols-3 gap-4">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label class="block text-sm font-medium text-slate-700 mb-1.5">Passing Year *</label>
+              <label class="block text-sm font-medium text-bd-pink-900 mb-1.5">Passing Year *</label>
               <input v-model.number="eduForm.passing_year" type="number" min="1970" :max="new Date().getFullYear()"
-                class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-emerald-400" />
+                class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-bd-pink-400" />
             </div>
             <div>
-              <label class="block text-sm font-medium text-slate-700 mb-1.5">Result / GPA</label>
+              <label class="block text-sm font-medium text-bd-pink-900 mb-1.5">Result / GPA</label>
               <input v-model="eduForm.result_value" type="text" placeholder="e.g. 3.8 out of 4"
-                class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-emerald-400" />
+                class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-bd-pink-400" />
             </div>
             <div class="flex items-end pb-2.5">
               <label class="flex items-center gap-2 cursor-pointer text-sm">
-                <input type="checkbox" v-model="eduForm.is_highest_education" class="accent-emerald-500" />
+                <input type="checkbox" v-model="eduForm.is_highest_education" class="accent-bd-pink-500" />
                 Highest Education
               </label>
             </div>
           </div>
           <button type="submit" :disabled="eduForm.processing"
-            class="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-semibold rounded-lg disabled:opacity-60">
+            class="px-5 py-2.5 bg-bd-pink-500 hover:bg-bd-pink-600 text-white text-sm font-semibold rounded-lg disabled:opacity-60">
             {{ eduForm.processing ? 'Adding…' : '+ Add Education' }}
           </button>
         </form>
@@ -303,13 +303,13 @@ function submitResume() {
     <!-- ── Tab: Skills ───────────────────────────────────────────────── -->
     <div v-show="activeTab === 3">
       <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-8 space-y-5">
-        <h3 class="font-semibold text-slate-800">Skills</h3>
+        <h3 class="font-semibold text-bd-pink-700">Skills</h3>
 
         <!-- Search + Add -->
         <div class="relative">
           <input v-model="skillSearch" @input="searchSkills" type="text"
             placeholder="Search and add skills…"
-            class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-emerald-400" />
+            class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-bd-pink-400" />
 
           <div v-if="filteredSkills.length && skillSearch"
             class="absolute top-full left-0 right-0 mt-1 bg-white border border-slate-200 rounded-lg shadow-lg z-10 max-h-48 overflow-y-auto">
@@ -327,16 +327,16 @@ function submitResume() {
         <!-- Selected skills -->
         <div class="space-y-3">
           <div v-for="skill in selectedSkills" :key="skill.id"
-            class="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
+            class="flex items-center gap-3 p-3 bg-bd-pink-50 rounded-lg">
             <span class="font-medium text-slate-700 text-sm w-32 flex-shrink-0">{{ skill.name }}</span>
-            <select v-model="skill.proficiency" class="flex-1 px-2 py-1.5 border border-slate-200 rounded text-sm focus:outline-none focus:border-emerald-400">
+            <select v-model="skill.proficiency" class="flex-1 px-2 py-1.5 border border-slate-200 rounded text-sm focus:outline-none focus:border-bd-pink-400">
               <option value="beginner">Beginner</option>
               <option value="intermediate">Intermediate</option>
               <option value="advanced">Advanced</option>
               <option value="expert">Expert</option>
             </select>
             <input v-model.number="skill.years_used" type="number" min="0" max="50" placeholder="Yrs"
-              class="w-16 px-2 py-1.5 border border-slate-200 rounded text-sm focus:outline-none focus:border-emerald-400" />
+              class="w-16 px-2 py-1.5 border border-slate-200 rounded text-sm focus:outline-none focus:border-bd-pink-400" />
             <button @click="removeSkill(skill.id)" class="text-red-400 hover:text-red-600">✕</button>
           </div>
           <p v-if="!selectedSkills.length" class="text-slate-400 text-sm text-center py-6">
@@ -345,7 +345,7 @@ function submitResume() {
         </div>
 
         <button @click="saveSkills" type="button"
-          class="px-6 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-semibold rounded-lg">
+          class="px-6 py-2.5 bg-bd-pink-500 hover:bg-bd-pink-600 text-white text-sm font-semibold rounded-lg">
           Save Skills
         </button>
       </div>
@@ -354,24 +354,24 @@ function submitResume() {
     <!-- ── Tab: Resume Upload ────────────────────────────────────────── -->
     <div v-show="activeTab === 4">
       <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-8">
-        <h3 class="font-semibold text-slate-800 mb-2">Upload Resume PDF</h3>
+        <h3 class="font-semibold text-bd-pink-700 mb-2">Upload Resume PDF</h3>
         <p class="text-sm text-slate-500 mb-6">Upload a PDF resume. This will be sent to employers when you apply.</p>
 
-        <div v-if="profile.resume_file" class="mb-5 p-4 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center gap-3">
+        <div v-if="profile.resume_file" class="mb-5 p-4 bg-bd-pink-50 border border-bd-pink-200 rounded-xl flex items-center gap-3">
           <span class="text-2xl">📄</span>
           <div>
-            <p class="text-sm font-medium text-emerald-800">Resume uploaded</p>
+            <p class="text-sm font-medium text-bd-blue-800">Resume uploaded</p>
             <a :href="route('seeker.resume.pdf')" target="_blank"
-              class="text-xs text-emerald-600 hover:underline">View / Download →</a>
+              class="text-xs text-bd-pink-600 hover:underline">View / Download →</a>
           </div>
         </div>
 
         <form @submit.prevent="submitResume" class="space-y-4">
           <input type="file" accept=".pdf" @change="handleResumeUpload"
             class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0
-                   file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100" />
+                   file:text-sm file:font-semibold file:bg-bd-pink-50 file:text-bd-pink-700 hover:file:bg-bd-pink-100" />
           <button type="submit" :disabled="resumeForm.processing || !resumeForm.resume_file"
-            class="px-6 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-semibold rounded-lg disabled:opacity-50">
+            class="px-6 py-2.5 bg-bd-pink-500 hover:bg-bd-pink-600 text-white text-sm font-semibold rounded-lg disabled:opacity-50">
             {{ resumeForm.processing ? 'Uploading…' : 'Upload Resume' }}
           </button>
         </form>

@@ -15,9 +15,22 @@
 </head>
 <body>
 <div class="container">
+
   <h1>{{ $profile->user->name }}</h1>
-  @if($profile->headline)<p style="font-size:14px;color:#475569;margin-top:4px;">{{ $profile->headline }}</p>@endif
-  <p class="meta">{{ $profile->user->email }} @if($profile->user->phone) · {{ $profile->user->phone }}@endif @if($profile->district) · {{ $profile->district }}, Bangladesh@endif</p>
+
+  @if($profile->headline)
+  <p style="font-size:14px;color:#475569;margin-top:4px;">{{ $profile->headline }}</p>
+  @endif
+
+  <p class="meta">
+    {{ $profile->user->email }}
+    @if($profile->user->phone)
+    &nbsp;&middot;&nbsp;{{ $profile->user->phone }}
+    @endif
+    @if($profile->district)
+    &nbsp;&middot;&nbsp;{{ $profile->district }}, Bangladesh
+    @endif
+  </p>
 
   @if($profile->bio)
   <h2>Summary</h2>
@@ -29,10 +42,19 @@
   @foreach($profile->workExperiences->sortByDesc('start_date') as $exp)
   <div class="section-item">
     <div class="flex">
-      <strong>{{ $exp->job_title }} — {{ $exp->company_name }}</strong>
-      <span class="meta">{{ \Carbon\Carbon::parse($exp->start_date)->format('M Y') }} – {{ $exp->is_current ? 'Present' : \Carbon\Carbon::parse($exp->end_date)->format('M Y') }}</span>
+      <strong>{{ $exp->job_title }} - {{ $exp->company_name }}</strong>
+      <span class="meta">
+        {{ \Carbon\Carbon::parse($exp->start_date)->format('M Y') }}
+        @if($exp->is_current)
+        - Present
+        @else
+        - {{ \Carbon\Carbon::parse($exp->end_date)->format('M Y') }}
+        @endif
+      </span>
     </div>
-    @if($exp->responsibilities)<p style="margin-top:4px;color:#475569;">{{ $exp->responsibilities }}</p>@endif
+    @if($exp->responsibilities)
+    <p style="margin-top:4px;color:#475569;">{{ $exp->responsibilities }}</p>
+    @endif
   </div>
   @endforeach
   @endif
@@ -45,7 +67,12 @@
       <strong>{{ $edu->degree }} in {{ $edu->field_of_study }}</strong>
       <span class="meta">{{ $edu->passing_year }}</span>
     </div>
-    <p class="meta">{{ $edu->institution_name }} @if($edu->result_value) · {{ $edu->result_value }}@endif</p>
+    <p class="meta">
+      {{ $edu->institution_name }}
+      @if($edu->result_value)
+      &nbsp;&middot;&nbsp;{{ $edu->result_value }}
+      @endif
+    </p>
   </div>
   @endforeach
   @endif
@@ -58,6 +85,7 @@
     @endforeach
   </div>
   @endif
+
 </div>
 </body>
 </html>
