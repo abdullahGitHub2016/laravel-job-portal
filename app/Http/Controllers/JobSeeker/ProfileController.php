@@ -58,13 +58,27 @@ class ProfileController extends Controller
 
         if ($request->hasFile('resume_file')) {
             $path = $request->file('resume_file')
-                ->storeAs("resumes/{$this->profile()->id}", 'resume.pdf', 'private');
+                ->storeAs("resumes/{$this->profile()->id}", 'resume.pdf', 'local');
             $data['resume_file'] = $path;
         }
 
         $this->profile()->update($data);
 
         return back()->with('success', 'Profile updated successfully.');
+    }
+
+    public function updateResume(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'resume_file' => ['required', 'file', 'mimes:pdf', 'max:5120'],
+        ]);
+
+        $path = $request->file('resume_file')
+            ->storeAs("resumes/{$this->profile()->id}", 'resume.pdf', 'local');
+
+        $this->profile()->update(['resume_file' => $path]);
+
+        return back()->with('success', 'Resume uploaded successfully.');
     }
 
     public function updatePhoto(Request $request): RedirectResponse

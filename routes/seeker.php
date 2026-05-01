@@ -16,7 +16,8 @@ Route::middleware(['auth', 'seeker'])
     // Profile
     Route::get('/profile',        [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile',      [ProfileController::class, 'update'])->name('profile.update');
-    Route::post('/profile/photo', [ProfileController::class, 'updatePhoto'])->name('profile.photo');
+    Route::post('/profile/resume',  [ProfileController::class, 'updateResume'])->name('profile.resume');
+
 
     // Education
     Route::post('/profile/education',                [ProfileController::class, 'storeEducation'])->name('education.store');
@@ -32,8 +33,9 @@ Route::middleware(['auth', 'seeker'])
     Route::post('/profile/skills', [ProfileController::class, 'syncSkills'])->name('skills.sync');
 
     // Resume
-    Route::get('/resume',     [ResumeController::class, 'show'])->name('resume.show');
-    Route::get('/resume/pdf', [ResumeController::class, 'pdf'])->name('resume.pdf');
+    Route::get('/resume',            [ResumeController::class, 'show'])->name('resume.show');
+    Route::get('/resume/pdf',        [ResumeController::class, 'pdf'])->name('resume.pdf');
+    Route::get('/resume/download',   [ResumeController::class, 'download'])->name('resume.download');
 
     // Applications
     Route::get('/applications',                          [ApplicationController::class, 'index'])->name('applications.index');

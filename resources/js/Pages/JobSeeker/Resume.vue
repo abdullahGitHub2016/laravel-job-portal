@@ -34,23 +34,25 @@ function formatDate(dateStr) {
   <SeekerLayout title="My Resume">
 
     <!-- Action bar (hidden in print) -->
-    <div class="flex justify-end gap-3 mb-6 print:hidden">
-      <a :href="route('seeker.resume.pdf')" target="_blank"
-        class="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-semibold rounded-lg transition-colors flex items-center gap-2">
-        <span>📥</span> Download PDF
+    <div class="flex justify-end gap-3 mb-4 print:hidden">
+      <a :href="profile.resume_file ? route('seeker.resume.download') : route('seeker.resume.pdf')"
+        target="_blank"
+        class="px-5 py-2.5 bg-bd-pink-500 hover:bg-bd-pink-600 text-white text-sm font-semibold rounded-lg transition-colors flex items-center gap-2">
+        <span>📥</span>
+        {{ profile.resume_file ? 'Download Uploaded Resume' : 'Download Generated PDF' }}
       </a>
     </div>
 
     <!-- ── Resume Document ────────────────────────────────────────────── -->
     <div id="resume-document"
-      class="bg-white shadow-sm border border-slate-100 rounded-2xl max-w-3xl mx-auto p-12 font-serif print:shadow-none print:border-none print:rounded-none print:p-0">
+      class="bg-white shadow-sm border border-slate-100 rounded-2xl max-w-3xl mx-auto p-5 sm:p-12 font-serif print:shadow-none print:border-none print:rounded-none print:p-0">
 
       <!-- Header -->
       <header class="border-b-2 border-slate-900 pb-6 mb-8">
-        <h1 class="text-4xl font-bold text-slate-900 tracking-tight">{{ user.name }}</h1>
+        <h1 class="text-2xl sm:text-4xl font-bold text-slate-900 tracking-tight">{{ user.name }}</h1>
         <p v-if="profile.headline" class="text-lg text-slate-600 mt-1">{{ profile.headline }}</p>
 
-        <div class="flex flex-wrap gap-4 mt-4 text-sm text-slate-500">
+        <div class="flex flex-col sm:flex-row flex-wrap gap-1 sm:gap-4 mt-3 text-sm text-slate-500">
           <span v-if="user.email">✉ {{ user.email }}</span>
           <span v-if="user.phone">📞 {{ user.phone }}</span>
           <span v-if="profile.district">📍 {{ profile.district }}, Bangladesh</span>

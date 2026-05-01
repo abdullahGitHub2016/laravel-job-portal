@@ -17,6 +17,24 @@ class ResumeController extends Controller
         return Inertia::render('JobSeeker/Resume', ['profile' => $profile]);
     }
 
+    public function download()
+    {
+        $profile = auth()->user()->jobSeekerProfile;
+
+        if (! $profile?->resume_file) {
+            abort(404, 'No resume uploaded yet.');
+        }
+
+        if (! \Illuminate\Support\Facades\Storage::disk('local')->exists($profile->resume_file)) {
+            abort(404, 'Resume file not found.');
+        }
+
+        $name = \Illuminate\Support\Str::slug(auth()->user()->name) . '-resume.pdf';
+
+        return \Illuminate\Support\Facades\Storage::disk('local')
+            ->download($profile->resume_file, $name);
+    }
+
     public function pdf()
     {
         $profile = auth()->user()

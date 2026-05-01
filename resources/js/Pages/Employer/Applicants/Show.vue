@@ -23,7 +23,7 @@ const STATUSES = [
   { value: 'shortlisted', label: 'Shortlisted', color: 'bg-indigo-100 text-indigo-700' },
   { value: 'interview',   label: 'Interview',   color: 'bg-purple-100 text-purple-700' },
   { value: 'offered',     label: 'Offered',     color: 'bg-amber-100 text-amber-700'   },
-  { value: 'hired',       label: 'Hired',       color: 'bg-emerald-100 text-emerald-700'},
+  { value: 'hired',       label: 'Hired',       color: 'bg-bd-pink-100 text-bd-pink-700'},
   { value: 'rejected',    label: 'Rejected',    color: 'bg-red-100 text-red-500'       },
 ]
 
@@ -72,7 +72,7 @@ function formatDate(date) {
     <!-- Breadcrumb -->
     <div class="mb-6 flex items-center gap-2 text-sm text-slate-500">
       <Link :href="route('employer.applicants.index', { job: job.id })"
-            class="hover:text-emerald-600 transition-colors">
+            class="hover:text-bd-pink-600 transition-colors">
         ← Back to {{ job.title }}
       </Link>
     </div>
@@ -83,9 +83,9 @@ function formatDate(date) {
       <div class="flex-1 min-w-0 space-y-5">
 
         <!-- Header Card -->
-        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
-          <div class="flex items-start gap-5">
-            <div class="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center text-2xl font-bold text-emerald-700 flex-shrink-0">
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 sm:p-6">
+          <div class="flex flex-col sm:flex-row items-start gap-4">
+            <div class="w-16 h-16 rounded-full bg-bd-pink-100 flex items-center justify-center text-2xl font-bold text-bd-pink-700 flex-shrink-0">
               {{ user?.name?.charAt(0) ?? '?' }}
             </div>
             <div class="flex-1 min-w-0">
@@ -107,7 +107,7 @@ function formatDate(date) {
             <!-- Resume download -->
             <a v-if="application.resume_snapshot"
                :href="route('employer.applicants.resume', { application: application.id })"
-               class="flex-shrink-0 px-4 py-2 border border-slate-200 rounded-lg text-sm text-slate-600 hover:bg-slate-50 transition-colors">
+               class="w-full sm:w-auto sm:flex-shrink-0 px-4 py-2 border border-slate-200 rounded-lg text-sm text-slate-600 hover:bg-slate-50 transition-colors text-center">
               ⬇ Resume
             </a>
           </div>
@@ -119,7 +119,7 @@ function formatDate(date) {
               {{ seeker.preferred_job_type.replace('_', ' ') }}
             </span>
             <span v-if="seeker?.job_seeking_status"
-                  class="px-2.5 py-1 bg-emerald-50 text-emerald-700 rounded-full text-xs font-medium">
+                  class="px-2.5 py-1 bg-bd-pink-50 text-bd-pink-700 rounded-full text-xs font-medium">
               {{ seeker.job_seeking_status.replace('_', ' ') }}
             </span>
             <span v-if="seeker?.expected_salary_min || seeker?.expected_salary_max"
@@ -135,25 +135,25 @@ function formatDate(date) {
         </div>
 
         <!-- Cover Letter -->
-        <div v-if="application.cover_letter" class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+        <div v-if="application.cover_letter" class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 sm:p-6">
           <h3 class="font-semibold text-slate-800 mb-3">Cover Letter</h3>
           <p class="text-slate-600 text-sm leading-relaxed whitespace-pre-line">{{ application.cover_letter }}</p>
         </div>
 
         <!-- Bio -->
-        <div v-if="seeker?.bio" class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+        <div v-if="seeker?.bio" class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 sm:p-6">
           <h3 class="font-semibold text-slate-800 mb-3">About</h3>
           <p class="text-slate-600 text-sm leading-relaxed">{{ seeker.bio }}</p>
         </div>
 
         <!-- Work Experience -->
-        <div v-if="seeker?.work_experiences?.length" class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+        <div v-if="seeker?.work_experiences?.length" class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 sm:p-6">
           <h3 class="font-semibold text-slate-800 mb-4">Work Experience</h3>
           <div class="space-y-4">
             <div v-for="exp in seeker.work_experiences" :key="exp.id"
                  class="flex gap-4">
               <div class="w-2 flex flex-col items-center">
-                <div class="w-2 h-2 rounded-full bg-emerald-400 mt-1.5 flex-shrink-0"></div>
+                <div class="w-2 h-2 rounded-full bg-bd-blue-400 mt-1.5 flex-shrink-0"></div>
                 <div class="flex-1 w-px bg-slate-100 mt-1"></div>
               </div>
               <div class="flex-1 pb-4">
@@ -176,7 +176,7 @@ function formatDate(date) {
         </div>
 
         <!-- Education -->
-        <div v-if="seeker?.educations?.length" class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+        <div v-if="seeker?.educations?.length" class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 sm:p-6">
           <h3 class="font-semibold text-slate-800 mb-4">Education</h3>
           <div class="space-y-3">
             <div v-for="edu in seeker.educations" :key="edu.id"
@@ -197,7 +197,7 @@ function formatDate(date) {
         </div>
 
         <!-- Skills -->
-        <div v-if="seeker?.skills?.length" class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+        <div v-if="seeker?.skills?.length" class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 sm:p-6">
           <h3 class="font-semibold text-slate-800 mb-3">Skills</h3>
           <div class="flex flex-wrap gap-2">
             <span v-for="skill in seeker.skills" :key="skill.id"
@@ -212,8 +212,8 @@ function formatDate(date) {
       </div>
 
       <!-- ── Right: Action Sidebar ─────────────────────────────────────────── -->
-      <div class="lg:w-72 flex-shrink-0">
-        <div class="sticky top-6 space-y-4">
+      <div class="w-full lg:w-72 flex-shrink-0">
+        <div class="lg:sticky lg:top-6 space-y-4">
 
           <!-- Status Update -->
           <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
@@ -242,7 +242,7 @@ function formatDate(date) {
               rows="4"
               placeholder="Private notes about this applicant…"
               class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm resize-none
-                     focus:outline-none focus:border-emerald-400"
+                     focus:outline-none focus:border-bd-pink-400"
             />
             <button
               @click="saveNotes"

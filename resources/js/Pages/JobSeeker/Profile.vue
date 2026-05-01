@@ -121,12 +121,10 @@ function handleResumeUpload(e) {
 }
 
 function submitResume() {
-  resumeForm.post(route('seeker.profile.update'), {
+  resumeForm.post(route('seeker.profile.resume'), {
     forceFormData: true,
     preserveScroll: true,
-    onSuccess: () => {
-      resumeForm.reset()
-    },
+    onSuccess: () => { resumeForm.reset() },
   })
 }
 </script>
@@ -361,8 +359,8 @@ function submitResume() {
           <span class="text-2xl">📄</span>
           <div>
             <p class="text-sm font-medium text-bd-blue-800">Resume uploaded</p>
-            <a :href="route('seeker.resume.pdf')" target="_blank"
-              class="text-xs text-bd-pink-600 hover:underline">View / Download →</a>
+            <a :href="route('seeker.resume.download')" target="_blank"
+              class="text-xs text-bd-pink-600 hover:underline">Download Uploaded Resume →</a>
           </div>
         </div>
 
