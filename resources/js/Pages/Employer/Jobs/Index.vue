@@ -6,7 +6,7 @@ defineProps({ jobs: Object })
 
 function deleteJob(id) {
   if (confirm('Delete this job post?')) {
-    useForm({}).delete(route('employer.jobs.destroy', id))
+    useForm({}).delete(route('employer.jobs.destroy', { job: id }))
   }
 }
 </script>
@@ -46,8 +46,8 @@ function deleteJob(id) {
               </td>
               <td class="px-6 py-4">
                 <div class="flex items-center gap-3 justify-end">
-                  <Link :href="route('employer.applicants.index', job.id)" class="text-xs text-bd-blue-600 hover:underline">Applicants</Link>
-                  <Link :href="route('employer.jobs.edit', job.id)" class="text-xs text-slate-600 hover:underline">Edit</Link>
+                  <Link :href="route('employer.applicants.index', { job: job.id })" class="text-xs text-bd-blue-600 hover:underline">Applicants</Link>
+                  <Link :href="route('employer.jobs.edit', { job: job.id })" class="text-xs text-slate-600 hover:underline">Edit</Link>
                   <button @click="deleteJob(job.id)" class="text-xs text-red-400 hover:underline">Delete</button>
                 </div>
               </td>
@@ -79,11 +79,11 @@ function deleteJob(id) {
           <span>📅 {{ job.application_deadline }}</span>
         </div>
         <div class="flex gap-2 pt-3 border-t border-slate-100">
-          <Link :href="route('employer.applicants.index', job.id)"
+          <Link :href="route('employer.applicants.index', { job: job.id })"
             class="flex-1 text-center py-2 text-xs font-medium bg-bd-pink-50 text-bd-pink-700 rounded-lg hover:bg-bd-pink-100 transition-colors">
             View Applicants
           </Link>
-          <Link :href="route('employer.jobs.edit', job.id)"
+          <Link :href="route('employer.jobs.edit', { job: job.id })"
             class="px-4 py-2 text-xs font-medium border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-50 transition-colors">
             Edit
           </Link>

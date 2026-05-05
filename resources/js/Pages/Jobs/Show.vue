@@ -154,11 +154,11 @@ const statusColors = {
             </section>
 
             <!-- Required Skills -->
-            <section v-if="job.skills?.length">
+            <section v-if="job.required_skills?.length">
               <h2 class="text-lg font-semibold text-slate-900 mb-3 flex items-center gap-2 before:block before:w-1 before:h-5 before:rounded-full before:bg-bd-pink-500">Required Skills</h2>
               <div class="flex flex-wrap gap-2">
                 <span
-                  v-for="skill in job.skills"
+                  v-for="skill in job.required_skills"
                   :key="skill.id"
                   class="px-3 py-1 rounded-full text-sm font-medium"
                   :class="skill.is_required

@@ -14,11 +14,12 @@ class JobResource extends JsonResource
             'slug'                 => $this->slug,
             'description'          => $this->description,
             'requirements'         => $this->requirements,
-            'benefits'             => $this->benefits,
+            'category_id'          => $this->category_id,
             'job_type'             => $this->job_type,
             'job_type_label'       => ucwords(str_replace('_', ' ', $this->job_type)),
             'experience_level'     => $this->experience_level,
             'experience_label'     => ucfirst($this->experience_level),
+            'experience_years_min' => $this->experience_years_min,
             'vacancies'            => $this->vacancies,
             'education_level'      => $this->education_level,
             'location'             => $this->location,
@@ -31,6 +32,7 @@ class JobResource extends JsonResource
             'currency'             => $this->currency,
             'show_salary'          => $this->show_salary,
             'salary_display'       => $this->formatSalary(),
+            'gender_preference'    => $this->gender_preference,
             'is_featured'          => $this->is_featured,
             'is_hot'               => $this->is_hot,
             'is_urgent'            => $this->is_urgent,
@@ -44,12 +46,14 @@ class JobResource extends JsonResource
                                         : null,
             'view_count'           => $this->view_count,
             'application_count'    => $this->application_count ?? $this->applications_count ?? 0,
-            'category'   => $this->whenLoaded('category', fn() => [
+
+            'category' => $this->whenLoaded('category', fn() => [
                 'id'   => $this->category->id,
                 'name' => $this->category->name,
                 'slug' => $this->category->slug,
             ]),
-            'employer'   => $this->whenLoaded('employerProfile', fn() => [
+
+            'employer' => $this->whenLoaded('employerProfile', fn() => [
                 'id'          => $this->employerProfile->id,
                 'name'        => $this->employerProfile->company_name,
                 'logo'        => $this->employerProfile->logo
@@ -58,39 +62,39 @@ class JobResource extends JsonResource
                 'district'    => $this->employerProfile->district,
                 'is_verified' => $this->employerProfile->verification_status === 'verified',
                 'is_premium'  => $this->employerProfile->is_premium,
+                'overview'    => $this->employerProfile->company_overview,
+                'website'     => $this->employerProfile->website,
             ]),
-            'skills' => $this->whenLoaded('skills', fn() =>
-                $this->skills->map(fn($s) => [
-                    'id'          => $s->id,
-                    'name'        => $s->name,
-                    'is_required' => (bool) $s->pivot->is_required,
-                ])
-            ),
+
+            'skills' => $this->relationLoaded('skills')
+                ? ($this->skills?->map(fn($s) => ['id'=>$s->id,'name'=>$s->name,'is_required'=>(bool)$s->pivot->is_required])?->values()->all() ?? [])
+                : [],
+
+            // Always include benefits — relation must be loaded before calling resource
+            'benefits' => $this->relationLoaded('benefits')
+                ? ($this->benefits?->map(fn($b) => ['id'=>$b->id,'name'=>$b->name,'icon'=>$b->icon,'category'=>$b->category])?->values()->all() ?? [])
+                : [],
         ];
     }
 
     private function formatSalary(): string
     {
-        if (! $this->show_salary || $this->salary_type === 'negotiable') {
+        if (!$this->show_salary || $this->salary_type === 'negotiable') {
             return 'Negotiable';
         }
-
-        $currency = $this->currency === 'BDT' ? '৳' : $this->currency;
+        $currency = $this->currency === 'BDT' ? '৳' : ($this->currency ?? '৳');
         $suffix   = match($this->salary_type) {
             'monthly' => '/mo',
             'yearly'  => '/yr',
             'hourly'  => '/hr',
             default   => '',
         };
-
         if ($this->salary_min && $this->salary_max) {
             return $currency . number_format($this->salary_min) . ' – ' . $currency . number_format($this->salary_max) . $suffix;
         }
-
         if ($this->salary_min) {
             return 'From ' . $currency . number_format($this->salary_min) . $suffix;
         }
-
         return 'Negotiable';
     }
 }

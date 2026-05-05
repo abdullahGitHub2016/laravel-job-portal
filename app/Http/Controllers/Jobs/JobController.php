@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Jobs;
 
 use App\Http\Controllers\Controller;
@@ -32,22 +33,34 @@ class JobController extends Controller
             ->with(['employerProfile:id,company_name,logo,district', 'category:id,name,slug'])
             ->published()
             ->when($validated['q'] ?? null, fn($q, $term) => $q->search($term))
-            ->when($validated['category'] ?? null, fn($q, $slug) =>
+            ->when(
+                $validated['category'] ?? null,
+                fn($q, $slug) =>
                 $q->whereHas('category', fn($c) => $c->where('slug', $slug))
             )
-            ->when($validated['location'] ?? null, fn($q, $loc) =>
+            ->when(
+                $validated['location'] ?? null,
+                fn($q, $loc) =>
                 $q->where('district', 'like', "%{$loc}%")
             )
-            ->when($validated['job_type'] ?? null, fn($q, $type) =>
+            ->when(
+                $validated['job_type'] ?? null,
+                fn($q, $type) =>
                 $q->where('job_type', $type)
             )
-            ->when($validated['salary_min'] ?? null, fn($q, $min) =>
+            ->when(
+                $validated['salary_min'] ?? null,
+                fn($q, $min) =>
                 $q->where('salary_max', '>=', $min)
             )
-            ->when($validated['salary_max'] ?? null, fn($q, $max) =>
+            ->when(
+                $validated['salary_max'] ?? null,
+                fn($q, $max) =>
                 $q->where('salary_min', '<=', $max)
             )
-            ->when($validated['experience'] ?? null, fn($q, $level) =>
+            ->when(
+                $validated['experience'] ?? null,
+                fn($q, $level) =>
                 $q->where('experience_level', $level)
             )
             ->when(($validated['sort'] ?? 'latest') === 'latest',     fn($q) => $q->orderByDesc('published_at'))
@@ -107,8 +120,8 @@ class JobController extends Controller
             $seekerProfile = auth()->user()->jobSeekerProfile;
             if ($seekerProfile) {
                 $application       = Application::where('job_post_id', $job->id)
-                                        ->where('job_seeker_profile_id', $seekerProfile->id)
-                                        ->first();
+                    ->where('job_seeker_profile_id', $seekerProfile->id)
+                    ->first();
                 $hasApplied        = (bool) $application;
                 $applicationStatus = $application?->status;
                 $hasSaved          = $seekerProfile->savedJobs()->where('job_post_id', $job->id)->exists();
@@ -122,8 +135,11 @@ class JobController extends Controller
             ->orderByDesc('published_at')
             ->limit(4)->get();
 
+        $jobData               = (new JobResource($job))->resolve();
+        $jobData['id']         = (string) $job->getKey();
+
         return Inertia::render('Jobs/Show', [
-            'job'               => (new JobResource($job))->resolve(),
+            'job'               => $jobData,
             'relatedJobs'       => JobResource::collection($relatedJobs)->resolve(),
             'hasApplied'        => $hasApplied,
             'applicationStatus' => $applicationStatus,

@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Employer;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Job\JobResource;
+use App\Models\Benefit;
 use App\Models\Category;
 use App\Models\JobPost;
 use App\Models\Skill;
@@ -17,6 +18,21 @@ class JobController extends Controller
     private function employerProfile()
     {
         return auth()->user()->employerProfile;
+    }
+
+    private function formData(): array
+    {
+        return [
+            'categories'        => Category::where('is_active', true)
+                                    ->orderBy('name')
+                                    ->get(['id', 'name']),
+            'skills'            => Skill::orderBy('name')
+                                    ->get(['id', 'name', 'category']),
+            'availableBenefits' => Benefit::where('is_active', true)
+                                    ->orderBy('category')
+                                    ->orderBy('sort_order')
+                                    ->get(['id', 'name', 'icon', 'category']),
+        ];
     }
 
     public function index(): Response
@@ -34,10 +50,7 @@ class JobController extends Controller
 
     public function create(): Response
     {
-        return Inertia::render('Employer/Jobs/Create', [
-            'categories' => Category::where('is_active', true)->get(['id', 'name']),
-            'skills'     => Skill::orderBy('name')->get(['id', 'name', 'category']),
-        ]);
+        return Inertia::render('Employer/Jobs/Create', $this->formData());
     }
 
     public function store(Request $request): RedirectResponse
@@ -46,7 +59,6 @@ class JobController extends Controller
             'title'                => ['required', 'string', 'max:150'],
             'description'          => ['required', 'string', 'min:50'],
             'requirements'         => ['nullable', 'string'],
-            'benefits'             => ['nullable', 'string'],
             'category_id'          => ['required', 'exists:categories,id'],
             'job_type'             => ['required', 'in:full_time,part_time,contract,internship,freelance,remote,hybrid'],
             'experience_level'     => ['required', 'in:entry,junior,mid,senior,lead,executive'],
@@ -55,54 +67,80 @@ class JobController extends Controller
             'salary_type'          => ['required', 'in:monthly,yearly,hourly,negotiable'],
             'salary_min'           => ['nullable', 'numeric', 'min:0'],
             'salary_max'           => ['nullable', 'numeric', 'min:0'],
-            'currency'             => ['required', 'string', 'size:3'],
-            'show_salary'          => ['boolean'],
-            'is_remote'            => ['boolean'],
+            'currency'             => ['nullable', 'string'],
+            'show_salary'          => ['nullable', 'boolean'],
+            'is_remote'            => ['nullable', 'boolean'],
             'location'             => ['nullable', 'string', 'max:200'],
             'district'             => ['nullable', 'string', 'max:100'],
             'gender_preference'    => ['nullable', 'in:any,male,female'],
             'application_deadline' => ['required', 'date', 'after:today'],
-            // ✅ status now accepted from the form
             'status'               => ['required', 'in:draft,published'],
             'skills'               => ['nullable', 'array'],
             'skills.*.id'          => ['required', 'exists:skills,id'],
-            'skills.*.required'    => ['boolean'],
+            'skills.*.required'    => ['nullable', 'boolean'],
+            'benefit_ids'          => ['nullable', 'array'],
+            'benefit_ids.*'        => ['exists:benefits,id'],
         ]);
 
+        $data['currency']          = $data['currency'] ?? 'BDT';
+        $data['show_salary']       = $data['show_salary'] ?? true;
+        $data['is_remote']         = $data['is_remote'] ?? false;
+        $data['gender_preference'] = $data['gender_preference'] ?? 'any';
+
         $skillsData = $data['skills'] ?? [];
-        unset($data['skills']);
+        $benefitIds = $data['benefit_ids'] ?? [];
+        unset($data['skills'], $data['benefit_ids']);
 
         $data['slug']                = Str::slug($data['title']) . '-' . Str::random(6);
         $data['employer_profile_id'] = $this->employerProfile()->id;
 
-        // ✅ Only set published_at when actually publishing
         if ($data['status'] === 'published') {
             $data['published_at'] = now();
         }
 
         $job = JobPost::create($data);
 
-        if (! empty($skillsData)) {
+        if (!empty($skillsData)) {
             $pivot = collect($skillsData)->mapWithKeys(
                 fn($s) => [$s['id'] => ['is_required' => $s['required'] ?? true]]
             )->all();
             $job->skills()->sync($pivot);
         }
 
-        $message = $data['status'] === 'published' ? 'Job published successfully!' : 'Job saved as draft.';
+        $job->benefits()->sync($benefitIds);
+
+        $message = $data['status'] === 'published'
+            ? 'Job published successfully!'
+            : 'Job saved as draft.';
 
         return redirect()->route('employer.jobs.index')->with('success', $message);
     }
 
     public function edit(JobPost $job): Response
     {
-        $job->load('skills', 'category');
+        // Fresh load — bypass any cached empty collections from route model binding
+        $job->load(['skills', 'category', 'benefits']);
 
-        return Inertia::render('Employer/Jobs/Create', [
-            'job'        => (new JobResource($job))->resolve(),
-            'categories' => Category::where('is_active', true)->get(['id', 'name']),
-            'skills'     => Skill::orderBy('name')->get(['id', 'name', 'category']),
-        ]);
+        $resolved = (new JobResource($job))->resolve();
+
+        // Force override directly from DB-loaded collections
+        $resolved['benefits'] = $job->getRelation('benefits')->map(fn($b) => [
+            'id'       => (string) $b->id,
+            'name'     => $b->name,
+            'icon'     => $b->icon,
+            'category' => $b->category,
+        ])->values()->all();
+
+        $resolved['skills'] = $job->getRelation('skills')->map(fn($s) => [
+            'id'          => (string) $s->id,
+            'name'        => $s->name,
+            'is_required' => (bool) $s->pivot->is_required,
+        ])->values()->all();
+
+        return Inertia::render('Employer/Jobs/Create', array_merge(
+            $this->formData(),
+            ['job' => $resolved]
+        ));
     }
 
     public function update(Request $request, JobPost $job): RedirectResponse
@@ -111,7 +149,6 @@ class JobController extends Controller
             'title'                => ['required', 'string', 'max:150'],
             'description'          => ['required', 'string', 'min:50'],
             'requirements'         => ['nullable', 'string'],
-            'benefits'             => ['nullable', 'string'],
             'category_id'          => ['required', 'exists:categories,id'],
             'job_type'             => ['required', 'in:full_time,part_time,contract,internship,freelance,remote,hybrid'],
             'experience_level'     => ['required', 'in:entry,junior,mid,senior,lead,executive'],
@@ -120,9 +157,9 @@ class JobController extends Controller
             'salary_type'          => ['required', 'in:monthly,yearly,hourly,negotiable'],
             'salary_min'           => ['nullable', 'numeric', 'min:0'],
             'salary_max'           => ['nullable', 'numeric', 'min:0'],
-            'currency'             => ['required', 'string', 'size:3'],
-            'show_salary'          => ['boolean'],
-            'is_remote'            => ['boolean'],
+            'currency'             => ['nullable', 'string'],
+            'show_salary'          => ['nullable', 'boolean'],
+            'is_remote'            => ['nullable', 'boolean'],
             'location'             => ['nullable', 'string', 'max:200'],
             'district'             => ['nullable', 'string', 'max:100'],
             'gender_preference'    => ['nullable', 'in:any,male,female'],
@@ -130,25 +167,34 @@ class JobController extends Controller
             'status'               => ['required', 'in:draft,published'],
             'skills'               => ['nullable', 'array'],
             'skills.*.id'          => ['required', 'exists:skills,id'],
-            'skills.*.required'    => ['boolean'],
+            'skills.*.required'    => ['nullable', 'boolean'],
+            'benefit_ids'          => ['nullable', 'array'],
+            'benefit_ids.*'        => ['exists:benefits,id'],
         ]);
 
-        $skillsData = $data['skills'] ?? [];
-        unset($data['skills']);
+        $data['currency']          = $data['currency'] ?? 'BDT';
+        $data['show_salary']       = $data['show_salary'] ?? true;
+        $data['is_remote']         = $data['is_remote'] ?? false;
+        $data['gender_preference'] = $data['gender_preference'] ?? 'any';
 
-        // Set published_at if transitioning to published for first time
-        if ($data['status'] === 'published' && ! $job->published_at) {
+        $skillsData = $data['skills'] ?? [];
+        $benefitIds = $data['benefit_ids'] ?? [];
+        unset($data['skills'], $data['benefit_ids']);
+
+        if ($data['status'] === 'published' && !$job->published_at) {
             $data['published_at'] = now();
         }
 
         $job->update($data);
 
-        if (! empty($skillsData)) {
+        if (!empty($skillsData)) {
             $pivot = collect($skillsData)->mapWithKeys(
                 fn($s) => [$s['id'] => ['is_required' => $s['required'] ?? true]]
             )->all();
             $job->skills()->sync($pivot);
         }
+
+        $job->benefits()->sync($benefitIds);
 
         return back()->with('success', 'Job updated successfully.');
     }
@@ -162,12 +208,12 @@ class JobController extends Controller
     public function updateStatus(Request $request, JobPost $job): RedirectResponse
     {
         $request->validate(['status' => 'required|in:draft,published,archived']);
-
         $job->update([
             'status'       => $request->status,
-            'published_at' => $request->status === 'published' && ! $job->published_at ? now() : $job->published_at,
+            'published_at' => $request->status === 'published' && !$job->published_at
+                ? now()
+                : $job->published_at,
         ]);
-
         return back()->with('success', 'Status updated to: ' . ucfirst($request->status));
     }
 }

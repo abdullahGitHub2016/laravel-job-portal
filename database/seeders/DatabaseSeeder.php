@@ -1,6 +1,7 @@
 <?php
 namespace Database\Seeders;
 
+use App\Models\Benefit;
 use App\Models\Category;
 use App\Models\Industry;
 use App\Models\Skill;
@@ -11,6 +12,8 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        $this->call(BenefitSeeder::class);
+
         $categories = [
             'IT & Telecommunication', 'Banking & Finance', 'Marketing & Sales',
             'Engineering', 'Healthcare & Pharma', 'Education & Training',
@@ -36,25 +39,29 @@ class DatabaseSeeder extends Seeder
         }
 
         $skills = [
-            ['name' => 'PHP',         'category' => 'Programming'],
-            ['name' => 'Laravel',     'category' => 'Programming'],
-            ['name' => 'Vue.js',      'category' => 'Programming'],
-            ['name' => 'React',       'category' => 'Programming'],
-            ['name' => 'JavaScript',  'category' => 'Programming'],
-            ['name' => 'Python',      'category' => 'Programming'],
-            ['name' => 'MySQL',       'category' => 'Database'],
-            ['name' => 'PostgreSQL',  'category' => 'Database'],
-            ['name' => 'Docker',      'category' => 'DevOps'],
-            ['name' => 'AWS',         'category' => 'DevOps'],
-            ['name' => 'Figma',       'category' => 'Design'],
-            ['name' => 'Photoshop',   'category' => 'Design'],
-            ['name' => 'SEO',         'category' => 'Marketing'],
-            ['name' => 'Excel',       'category' => 'General'],
+            ['name' => 'PHP',           'category' => 'Programming'],
+            ['name' => 'Laravel',       'category' => 'Programming'],
+            ['name' => 'Vue.js',        'category' => 'Programming'],
+            ['name' => 'React',         'category' => 'Programming'],
+            ['name' => 'JavaScript',    'category' => 'Programming'],
+            ['name' => 'Python',        'category' => 'Programming'],
+            ['name' => 'MySQL',         'category' => 'Database'],
+            ['name' => 'PostgreSQL',    'category' => 'Database'],
+            ['name' => 'Docker',        'category' => 'DevOps'],
+            ['name' => 'AWS',           'category' => 'DevOps'],
+            ['name' => 'Figma',         'category' => 'Design'],
+            ['name' => 'Photoshop',     'category' => 'Design'],
+            ['name' => 'SEO',           'category' => 'Marketing'],
+            ['name' => 'Excel',         'category' => 'General'],
             ['name' => 'Communication', 'category' => 'General'],
         ];
 
         foreach ($skills as $skill) {
-            Skill::create(['name' => $skill['name'], 'slug' => Str::slug($skill['name']), 'category' => $skill['category']]);
+            Skill::create([
+                'name'     => $skill['name'],
+                'slug'     => Str::slug($skill['name']),
+                'category' => $skill['category'],
+            ]);
         }
     }
 }
